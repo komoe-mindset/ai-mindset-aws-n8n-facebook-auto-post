@@ -15,9 +15,9 @@
 
 Google Form **"Ai Mindset - Student Auto-Post Request (Phase 1)"** ကို ဖြည့်ပါ။
 
-> ⚠️ Form link ကို Ko က သင်တန်းသားများထံ ပေးပါမယ်။ ဒီဖိုင်ထဲမှာ Form URL မထည့်ထားပါ — Form ကို မဖန်တီးရသေးပါ (Google Forms ကို Muse နဲ့ မချိတ်ထားသေးလို့)။ Ko က Forms ချိတ်ပြီးတာနဲ့ link ကို မျှဝေပါမယ်။
+> ℹ️ Form link ကို Ko က သင်တန်းသားများထံ ပေးပါမယ်။ ဒီဖိုင်ထဲမှာ Form URL မထည့်ထားပါ — Ko က link ကို တိုက်ရိုက် မျှဝေပါမယ်။
 >
-> The Form link will be shared by Ko once it is created. Google Forms is not connected yet, so no Form URL is included in this file.
+> Ko shares the Form link with students directly; no Form URL is included in this file.
 
 Form fields (ဖြည့်ရမယ့် အချက်များ):
 
@@ -28,16 +28,25 @@ Form fields (ဖြည့်ရမယ့် အချက်များ):
 | Destination | Page API ID သို့မဟုတ် Telegram Chat ID — ကိုယ့် Page / group ရဲ့ ID (`<YOUR_PAGE_ID>` / `<YOUR_CHAT_ID>` ပုံစံ) |
 | Message | တင်ချင်တဲ့ စာသား |
 | Image URL | ပုံ link (ရှိရင်) |
-| Date | တင်စေချင်တဲ့ ရက် |
 
-Form တင်ပြီးတာနဲ့ အဖြေများက Google Sheet queue ထဲကို အလိုအလျောက် ရောက်ပါတယ်။
+Form တင်ပြီးတာနဲ့ အဖြေများက Google Sheet queue ထဲက **"Form Responses 1"** tab ထဲကို အလိုအလျောက် ရောက်ပါတယ် (Timestamp က အလိုအလျောက် ဖြည့်ပေးပါတယ်)။
+
+## Flow — Form → Sheet → n8n / How it flows
+
+1. သင်တန်းသားက **Google Form** ဖြည့်တယ်။
+2. အဖြေက **"Form Responses 1"** tab ထဲ ရောက်တယ်။
+3. Ko က အဲဒီ tab ထဲမှာ ကောင်းတဲ့ အတန်းကို **Status = approved** လို့ သတ်မှတ်တယ် (Status column သည် H ဖြစ်သည်)။
+4. Workflow **Student-Auto-Post-Central** က **"Form Responses 1"** tab ကို တိုက်ရိုက် ဖတ်ပြီး၊ နေ့စဉ် 08:00 (Asia/Rangoon) မှာ approved post များကို Facebook / Telegram မှာ တင်ပေးတယ်။
+5. တင်ပြီးတာနဲ့ Status က **posted** ဖြစ်သွားပြီး Post ID / Link ကို အတန်းထဲမှာ မှတ်ထားတယ် (Post ID / Link column သည် I ဖြစ်သည်)။
+
+> ⚠️ **"Sheet1"** tab ထဲကို row ကူးထည့်စရာ မလိုတော့ပါ — workflow က "Form Responses 1" tab ကနေ တိုက်ရိုက် ဖတ်ပါတယ်။ No need to copy rows to "Sheet1" — the workflow reads "Form Responses 1" directly.
 
 ## Ko ဘာလုပ်မလဲ? / What Ko does
 
-1. Sheet queue ကို စစ်တယ်။
+1. **"Form Responses 1"** tab ကို စစ်တယ်။
 2. ကောင်းတဲ့ အတန်းကို **Status = approved** လို့ သတ်မှတ်တယ်။
-3. Workflow **Student-Auto-Post-Central** (Schedule Trigger — နေ့စဉ် 08:00 Asia/Rangoon) က approved post များကို Facebook / Telegram မှာ တင်ပေးတယ်။
-4. တင်ပြီးတာနဲ့ Status က **posted** ဖြစ်သွားပြီး Post ID / Link ကို Sheet ထဲမှာ မှတ်ထားတယ်။
+3. Workflow **Student-Auto-Post-Central** (Schedule Trigger — နေ့စဉ် 08:00 Asia/Rangoon) က "Form Responses 1" tab ကို တိုက်ရိုက် ဖတ်ပြီး approved post များကို Facebook / Telegram မှာ တင်ပေးတယ်။
+4. တင်ပြီးတာနဲ့ Status က **posted** ဖြစ်သွားပြီး Post ID / Link ကို Sheet ထဲမှာ မှတ်ထားတယ် (matching column: Timestamp)။
 
 ## သင်တန်းသား ကိုယ်တိုင် ဖန်တီးရမယ့်အရာများ / What each student must create themselves
 
@@ -49,10 +58,9 @@ Form တင်ပြီးတာနဲ့ အဖြေများက Google She
 
 ## Activate မလုပ်ခင် Ko ပြင်ဆင်ရမယ့်အရာများ / What Ko must still configure before activating
 
-- Workflow ရဲ့ Google Sheets node များထဲက Sheet ID placeholder `<STUDENT_QUEUE_SHEET_ID>` ကို အစစ်အမှန် queue Sheet ID နဲ့ အစားထိုးပါ။
+- ✅ Workflow ရဲ့ Google Sheets node များ (**Read Queue** / **Update Queue**) က queue Sheet ကို တိုက်ရိုက် ဖတ်ပါတယ် — Sheet ID placeholder ကို အစားထိုးပြီးပါပြီ, tab နာမည်က **"Form Responses 1"** ဖြစ်ပြီး, **Update Queue** ရဲ့ matching column က **Timestamp** ဖြစ်ပါတယ်။
 - n8n ထဲမှာ **Google Sheets OAuth credential** တစ်ခု ထည့်ပါ။
 - n8n ထဲမှာ **Telegram credential** တစ်ခု ထည့်ပါ (သို့မဟုတ် HTTP node ထဲက Telegram Bot API placeholder token `<YOUR_TOKEN>` ကို အစားထိုးပါ)။
-- **Update Queue node** ရဲ့ matching column ကို Sheet ရဲ့ column များနဲ့ ကိုက်ညီအောင် ပြင်ဆင်ပါ။
 - **Image branch** ထည့်ပါ — Image URL ရှိရင် `sendPhoto` / photo post သုံးပြီး ပုံနဲ့တကွ တင်ပါ။
 
 ## လုံခြုံရေး စည်းမျဉ်းများ / Security rules
