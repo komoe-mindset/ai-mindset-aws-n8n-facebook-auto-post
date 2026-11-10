@@ -1,0 +1,17 @@
+# Secrets & local junk — ဘယ်တော့မှ GitHub ကို မတင်ရမယ့် ဖိုင်များ
+*.pem
+*.key
+*.p12
+*.pfx
+.env
+.env.*
+*secret*
+*token*
+*credential*
+id_rsa*
+id_ed25519*
+n8n_api_key.txt
+*.log
+.DS_Store
+Thumbs.db
+node_modules/

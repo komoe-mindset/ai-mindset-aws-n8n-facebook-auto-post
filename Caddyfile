@@ -1,0 +1,20 @@
+# Caddyfile — Ai Mindset n8n (https://n8n.komoe.org)
+# မြန်မာ: Caddy က Let's Encrypt certificate ကို အလိုအလျောက် ယူပေးပြီး
+# http ကို https သို့ redirect လုပ်ပေးပါတယ်။ n8n က 127.0.0.1:5678 မှာပဲ နားထောင်ပါတယ်။
+# English: Caddy auto-obtains a Let's Encrypt certificate and redirects
+# http -> https. n8n listens only on 127.0.0.1:5678.
+#
+# Install (Ubuntu 24.04, official Caddy apt repo — verified Caddy 2.11.9):
+#   sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl
+#   curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+#   curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+#   sudo apt update && sudo apt install -y caddy
+#   sudo cp Caddyfile /etc/caddy/Caddyfile
+#   sudo systemctl reload caddy
+#   curl -s -o /dev/null -w "https://n8n.komoe.org/ -> HTTP %{http_code}\n" https://n8n.komoe.org/
+#
+# DNS first: Cloudflare A record  n8n.komoe.org -> <YOUR_VPS_IP>  (DNS only, NOT proxied)
+
+n8n.komoe.org {
+	reverse_proxy 127.0.0.1:5678
+}
