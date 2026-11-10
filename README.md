@@ -400,3 +400,5 @@ curl -s -H "X-N8N-API-KEY: $KEY" https://n8n.komoe.org/api/v1/workflows
 ---
 
 *Built from Ko's real journey, 2026-11-09 → 2026-11-10. Ai Mindset — Building a smarter future for Myanmar through AI and technology.*
+
+*Commit history note: previous commit message typo fixed (AWS 200 USD).*
