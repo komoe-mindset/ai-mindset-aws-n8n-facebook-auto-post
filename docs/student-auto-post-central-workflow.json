@@ -1,0 +1,440 @@
+{
+ "id": "<YOUR_WORKFLOW_ID>",
+ "name": "Student-Auto-Post-Central",
+ "description": "Phase 1 Central Service (TEMPLATE - DO NOT ACTIVATE until configured). Daily 08:00 Asia/Rangoon: read the 'Form Responses 1' tab of the student queue Google Sheet directly (Google Form responses land there), post approved rows to Facebook and/or Telegram, then mark them posted. FLOW: Student fills the Google Form -> response lands in 'Form Responses 1' -> Ko sets Status=approved in that tab -> n8n posts at 8 AM -> Status becomes posted. CONFIGURED: Google Sheets credential attached to both Sheets nodes; Telegram Academy Bot credential attached to Telegram Send. (2) Telegram: Telegram Send is a real Telegram node using the Telegram Academy Bot credential. (3) If a row has an Image URL, use sendPhoto (Telegram) / photo post (Facebook) instead of the text-only message - add an IF branch on Image URL before the post nodes. Facebook node reuses the DEMO 'Facebook Graph account' credential and demo Page from FB-Auto-Post - replace with each student's own credential/Page before real use.\n\nFIX 2026-11-10 (test execution #5 failed: 'Sheet with ID Form Responses 1 not found'): Read/Update Queue sheetName now uses tab gid <YOUR_TAB_ID> (mode id). Filter Approved repaired to Status=approved. Facebook node DISABLED until Platform routing is added.\n\nROUTING 2026-11-10: Platform routing added - 'Is Facebook?' (Platform contains Facebook) -> Facebook Graph API (enabled), 'Is Telegram?' (Platform contains Telegram) -> Telegram Send. 'Both' matches both branches. Facebook and Telegram both feed Update Queue.",
+ "active": false,
+ "isArchived": false,
+ "versionCounter": 13,
+ "sourceWorkflowId": null,
+ "triggerCount": 0,
+ "nodes": [
+  {
+   "id": "0adaa58c-fdf1-4674-9960-b97940f66d6c",
+   "name": "Schedule Trigger",
+   "type": "n8n-nodes-base.scheduleTrigger",
+   "typeVersion": 1.2,
+   "position": [
+    0,
+    0
+   ],
+   "parameters": {
+    "rule": {
+     "interval": [
+      {
+       "field": "cronExpression",
+       "expression": "0 8 * * *"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "6197e951-a427-45b3-a82d-48c82260a75b",
+   "name": "Read Queue",
+   "notes": "Reads 'Form Responses 1' tab directly (Google Form responses). Ko approves a row by setting Status=approved in that tab. Still needs a Google Sheets OAuth credential added in the n8n UI. Expected columns: Timestamp, Student Name, Platform, Destination (Facebook Page API ID or Telegram Chat ID), Message, Image URL, Status, Post ID / Link.",
+   "type": "n8n-nodes-base.googleSheets",
+   "typeVersion": 4,
+   "position": [
+    240,
+    0
+   ],
+   "parameters": {
+    "documentId": {
+     "__rl": true,
+     "cachedResultName": "Ai Mindset - Student Auto-Post Queue (Phase 1)",
+     "mode": "id",
+     "value": "<YOUR_SHEET_ID>"
+    },
+    "sheetName": {
+     "__rl": true,
+     "cachedResultName": "Form Responses 1",
+     "mode": "id",
+     "value": "<YOUR_TAB_ID>"
+    },
+    "options": {}
+   }
+  },
+  {
+   "id": "e2be6dff-c0d9-434f-90fd-55760de1331b",
+   "name": "Filter Approved",
+   "notes": "Keeps only rows with Status=approved (the Status column added to 'Form Responses 1').",
+   "type": "n8n-nodes-base.if",
+   "typeVersion": 2.2,
+   "position": [
+    480,
+    0
+   ],
+   "parameters": {
+    "conditions": {
+     "options": {
+      "caseSensitive": true,
+      "leftValue": "",
+      "typeValidation": "loose",
+      "version": 2
+     },
+     "conditions": [
+      {
+       "id": "2518618a-3cca-49ea-b035-3e3b1954499e",
+       "leftValue": "={{ $json.Status }}",
+       "rightValue": "approved",
+       "operator": {
+        "type": "string",
+        "operation": "equals",
+        "name": "filter.operator.string"
+       }
+      }
+     ],
+     "combinator": "and"
+    },
+    "looseTypeValidation": true,
+    "options": {}
+   }
+  },
+  {
+   "id": "ab943cbf-b9e3-4ed7-a8df-4f013554aed4",
+   "name": "Facebook Graph API",
+   "disabled": false,
+   "notes": "DEMO credential/Page copied from FB-Auto-Post. Replace with the student's own Facebook credential/Page before real use. If the row has an Image URL, post a photo instead of a text feed post.\nDISABLED 2026-11-10: Facebook is disabled until Platform-based routing (IF Platform contains Facebook / Telegram) is added, so Telegram-only rows cannot post to Facebook.",
+   "type": "n8n-nodes-base.facebookGraphApi",
+   "typeVersion": 1,
+   "position": [
+    960,
+    -160
+   ],
+   "parameters": {
+    "httpRequestMethod": "POST",
+    "graphApiVersion": "v25.0",
+    "node": "<YOUR_PAGE_ID>",
+    "edge": "feed",
+    "options": {
+     "queryParameters": {
+      "parameter": [
+       {
+        "name": "message",
+        "value": "={{ $json.Message }}"
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "22152bb6-b76c-4ebd-b5d0-7568e1366629",
+   "name": "Telegram Send",
+   "notes": "Telegram node with Telegram Academy Bot credential. Chat ID from the Destination column (long header name, falls back to Destination). Text from Message column. If the row has an Image URL, swap this for a sendPhoto operation.",
+   "type": "n8n-nodes-base.telegram",
+   "typeVersion": 1.2,
+   "position": [
+    960,
+    160
+   ],
+   "parameters": {
+    "chatId": "={{ $json['Destination (Facebook Page API ID or Telegram Chat ID)'] || $json.Destination }}",
+    "text": "={{ $json.Message }}",
+    "additionalFields": {}
+   }
+  },
+  {
+   "id": "5f46bbed-cf14-48fb-9a0f-e2f8f5643f3f",
+   "name": "Update Queue",
+   "notes": "Writes back to 'Form Responses 1': matches on Timestamp (taken from the paired Read Queue row), sets Status=posted and Post ID/Link from the Telegram send result. Runs only after Telegram Send. Post ID fix 2026-11-10: $json in this node does not hold the posting node output (paired-item mismatch), so Post ID is read explicitly from the posting node that actually ran, guarded by isExecuted + ternary (plain .item references would throw when the other branch did not run).",
+   "type": "n8n-nodes-base.googleSheets",
+   "typeVersion": 4,
+   "position": [
+    1200,
+    0
+   ],
+   "parameters": {
+    "operation": "update",
+    "documentId": {
+     "__rl": true,
+     "cachedResultName": "Ai Mindset - Student Auto-Post Queue (Phase 1)",
+     "mode": "id",
+     "value": "<YOUR_SHEET_ID>"
+    },
+    "sheetName": {
+     "__rl": true,
+     "cachedResultName": "Form Responses 1",
+     "mode": "id",
+     "value": "<YOUR_TAB_ID>"
+    },
+    "columns": {
+     "mappingMode": "defineBelow",
+     "value": {
+      "Timestamp": "={{ $('Read Queue').item.json.Timestamp || $json.Timestamp }}",
+      "Status": "posted",
+      "Post ID / Link": "={{ $('Facebook Graph API').isExecuted ? $('Facebook Graph API').item.json.id : ($('Telegram Send').isExecuted ? $('Telegram Send').item.json.result.message_id : ($json.result.message_id || $json.message_id || $json.id || '')) }}"
+     },
+     "matchingColumns": [
+      "Timestamp"
+     ],
+     "schema": [
+      {
+       "id": "Timestamp",
+       "displayName": "Timestamp",
+       "required": false,
+       "defaultMatch": false,
+       "display": true,
+       "type": "string",
+       "canBeUsedToMatch": true,
+       "removed": false
+      },
+      {
+       "id": "Student Name",
+       "displayName": "Student Name",
+       "required": false,
+       "defaultMatch": false,
+       "display": true,
+       "type": "string",
+       "canBeUsedToMatch": true,
+       "removed": false
+      },
+      {
+       "id": "Platform",
+       "displayName": "Platform",
+       "required": false,
+       "defaultMatch": false,
+       "display": true,
+       "type": "string",
+       "canBeUsedToMatch": true,
+       "removed": false
+      },
+      {
+       "id": "Destination (Facebook Page API ID or Telegram Chat ID)",
+       "displayName": "Destination (Facebook Page API ID or Telegram Chat ID)",
+       "required": false,
+       "defaultMatch": false,
+       "display": true,
+       "type": "string",
+       "canBeUsedToMatch": true,
+       "removed": false
+      },
+      {
+       "id": "Message",
+       "displayName": "Message",
+       "required": false,
+       "defaultMatch": false,
+       "display": true,
+       "type": "string",
+       "canBeUsedToMatch": true,
+       "removed": false
+      },
+      {
+       "id": "Image URL (optional - public link to your image)",
+       "displayName": "Image URL (optional - public link to your image)",
+       "required": false,
+       "defaultMatch": false,
+       "display": true,
+       "type": "string",
+       "canBeUsedToMatch": true,
+       "removed": false
+      },
+      {
+       "id": "Status",
+       "displayName": "Status",
+       "required": false,
+       "defaultMatch": false,
+       "display": true,
+       "type": "string",
+       "canBeUsedToMatch": true
+      },
+      {
+       "id": "Post ID / Link",
+       "displayName": "Post ID / Link",
+       "required": false,
+       "defaultMatch": false,
+       "display": true,
+       "type": "string",
+       "canBeUsedToMatch": true,
+       "removed": false
+      },
+      {
+       "id": "row_number",
+       "displayName": "row_number",
+       "required": false,
+       "defaultMatch": false,
+       "display": true,
+       "type": "number",
+       "canBeUsedToMatch": true,
+       "readOnly": true,
+       "removed": false
+      }
+     ],
+     "attemptToConvertTypes": false,
+     "convertFieldsToString": false
+    },
+    "options": {}
+   }
+  },
+  {
+   "id": "5da241c7-5138-4070-a429-64692923dc3b",
+   "name": "Is Facebook?",
+   "notes": "True branch -> Facebook Graph API. Platform contains 'Facebook' (matches 'Facebook' and 'Both').",
+   "type": "n8n-nodes-base.if",
+   "typeVersion": 2.2,
+   "position": [
+    720,
+    -160
+   ],
+   "parameters": {
+    "conditions": {
+     "options": {
+      "caseSensitive": true,
+      "leftValue": "",
+      "typeValidation": "loose",
+      "version": 2
+     },
+     "conditions": [
+      {
+       "id": "5da241c7-5138-4070-a429-64692923dc3b",
+       "leftValue": "={{ $json.Platform }}",
+       "rightValue": "Facebook",
+       "operator": {
+        "type": "string",
+        "operation": "contains",
+        "name": "filter.operator.string"
+       }
+      }
+     ],
+     "combinator": "and"
+    },
+    "looseTypeValidation": true,
+    "options": {}
+   }
+  },
+  {
+   "id": "d47d50d7-9a8b-4787-8bdd-30f519d490ec",
+   "name": "Is Telegram?",
+   "notes": "True branch -> Telegram Send. Platform contains 'Telegram' (matches 'Telegram' and 'Both').",
+   "type": "n8n-nodes-base.if",
+   "typeVersion": 2.2,
+   "position": [
+    720,
+    160
+   ],
+   "parameters": {
+    "conditions": {
+     "options": {
+      "caseSensitive": true,
+      "leftValue": "",
+      "typeValidation": "loose",
+      "version": 2
+     },
+     "conditions": [
+      {
+       "id": "d47d50d7-9a8b-4787-8bdd-30f519d490ec",
+       "leftValue": "={{ $json.Platform }}",
+       "rightValue": "Telegram",
+       "operator": {
+        "type": "string",
+        "operation": "contains",
+        "name": "filter.operator.string"
+       }
+      }
+     ],
+     "combinator": "and"
+    },
+    "looseTypeValidation": true,
+    "options": {}
+   }
+  }
+ ],
+ "connections": {
+  "Schedule Trigger": {
+   "main": [
+    [
+     {
+      "index": 0,
+      "node": "Read Queue",
+      "type": "main"
+     }
+    ]
+   ]
+  },
+  "Read Queue": {
+   "main": [
+    [
+     {
+      "index": 0,
+      "node": "Filter Approved",
+      "type": "main"
+     }
+    ]
+   ]
+  },
+  "Filter Approved": {
+   "main": [
+    [
+     {
+      "index": 0,
+      "node": "Is Facebook?",
+      "type": "main"
+     },
+     {
+      "index": 0,
+      "node": "Is Telegram?",
+      "type": "main"
+     }
+    ],
+    []
+   ]
+  },
+  "Is Facebook?": {
+   "main": [
+    [
+     {
+      "index": 0,
+      "node": "Facebook Graph API",
+      "type": "main"
+     }
+    ],
+    []
+   ]
+  },
+  "Is Telegram?": {
+   "main": [
+    [
+     {
+      "index": 0,
+      "node": "Telegram Send",
+      "type": "main"
+     }
+    ],
+    []
+   ]
+  },
+  "Facebook Graph API": {
+   "main": [
+    [
+     {
+      "index": 0,
+      "node": "Update Queue",
+      "type": "main"
+     }
+    ]
+   ]
+  },
+  "Telegram Send": {
+   "main": [
+    [
+     {
+      "index": 0,
+      "node": "Update Queue",
+      "type": "main"
+     }
+    ]
+   ]
+  }
+ },
+ "nodeGroups": [],
+ "settings": {
+  "timezone": "Asia/Rangoon",
+  "executionOrder": "v1",
+  "binaryMode": "separate"
+ },
+ "staticData": null,
+ "pinData": {},
+ "meta": null,
+ "tags": [],
+ "parentFolder": null
+}

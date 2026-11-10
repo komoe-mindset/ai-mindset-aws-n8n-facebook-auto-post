@@ -352,27 +352,146 @@ curl -s -H "X-N8N-API-KEY: $KEY" https://n8n.komoe.org/api/v1/workflows
 
 ---
 
-## 🎓 Better way to teach — 3 lessons, not one long session / သင်ကြားနည်း (၃ ချိန်ခွဲ သင်ပါ)
+## 🎓 Better way to teach — 4 lessons, not one long session / သင်ကြားနည်း (၄ ချိန်ခွဲ သင်ပါ)
 
-တစ်ထိုင်တည်း အရှည်ကြီး မသင်ပါနဲ့ — ၃ ချိန်ခွဲပါ။ ချိန်တိုင်းမှာ **checkpoint** တစ်ခုစီ ရှိပါတယ်။ Checkpoint မအောင်ရင် နောက်ချိန် မသွားပါနဲ့။
+တစ်ထိုင်တည်း အရှည်ကြီး မသင်ပါနဲ့ — ၄ ချိန်ခွဲပါ။ ချိန်တိုင်းမှာ **checkpoint** တစ်ခုစီ ရှိပါတယ်။ Checkpoint မအောင်ရင် နောက်ချိန် မသွားပါနဲ့။ ချိန်တိုင်းအဆုံးမှာ **"တမင်ဖျက်ကြည့်ပါ" (break it on purpose)** လေ့ကျင့်ခန်း တစ်ခုစီ ပါပါတယ် — အမှားကို ကိုယ်တိုင်မြင်ဖူးမှ တကယ် မှတ်မိပါတယ်။
 
 ### Lesson 1 — AWS + $200 credit (30 min) / သင်ခန်း ၁
 - **သင်တာ:** AWS အကောင့်ဖွင့်နည်း, Budgets, EC2, Lambda, RDS (Bedrock block အကြောင်း အပါအဝင်)။
 - **Hands-on:** ကျောင်းသားတစ်ယောက်ချင်း 5 tasks ကို ကိုယ်တိုင်လုပ်ပြီး task တိုင်း **screenshot** ယူပါ။
 - **✅ Checkpoint:** Billing screenshot — Credits remaining **$200.00**, Amount due **$0.00**။
+- **🔧 Break it on purpose:** EC2 instance ကို terminate **မလုပ်ဘဲ** ထားကြည့်ပါ — Billing မှာ ငွေကုန်နေတာကို သတိထားမိလား? ပြီးမှ terminate လုပ်ပြီး $0 ပြန်ဖြစ်အောင် လုပ်ပါ။
 - **သတိပေးချက်:** Free → Paid upgrade လုံးဝ မလုပ်ရ။ EC2/RDS လုပ်ပြီးရင် ဖျက်ဖို့ မမေ့ရ။
 
 ### Lesson 2 — VPS + n8n + HTTPS (45 min) / သင်ခန်း ၂
 - **သင်တာ:** Lightsail VPS ဖန်တီးနည်း, SSH key (ubuntu vs root အမှား), `install-docker-n8n.sh` script, Caddy + Let's Encrypt။
 - **Hands-on:** ကျောင်းသားတစ်ယောက်ချင်း ကိုယ့် Lightsail VPS မှာ n8n run ပါ။
 - **✅ Checkpoint:** `https://n8n.komoe.org` (ကိုယ့် domain) ဖွင့်ရင် HTTP **200** + owner account ဖန်တီးပြီး။
+- **🔧 Break it on purpose:** SSH public key ကို `/root/.ssh/authorized_keys` ထဲ **တမင်ထည့်ကြည့်ပါ** — `Permission denied (publickey)` error ကို မြင်ရပါမယ်။ ပြီးမှ `/home/ubuntu/.ssh/authorized_keys` ထဲ ပြောင်းထည့်ပြီး ပြန်ဝင်ကြည့်ပါ။
 - **သတိပေးချက်:** Password/token တွေကို chat/screenshot မှာ မမျှရ။ `N8N_SECURE_COOKIE=false` မထည့်ရ။
 
 ### Lesson 3 — Meta App + token + n8n workflow (45 min) / သင်ခန်း ၃
 - **သင်တာ:** Meta App, use-case permissions, Graph Explorer test post, long-lived Page token, n8n workflow + Schedule Trigger။
 - **Hands-on:** Test post ၁ ခု တင်ပြီး post ID ကို ချရေးပါ၊ ပြီးမှ schedule ပြောင်းပါ။
 - **✅ Checkpoint:** ကိုယ့် Page မှာ test post ID ပေါ်နေခြင်း + workflow saved (inactive)။
+- **🔧 Break it on purpose:** n8n Facebook credential ကို **တမင်ဖြုတ်ကြည့်ပါ** (credential ကို disconnect လုပ်ပါ) — workflow run လုပ်ရင် ဘယ် error တက်လဲ? Error message ကို ဖတ်ပြီး credential ပြန်ချိတ်ပါ။
 - **သတိပေးချက်:** Personal profile ကို API နဲ့ auto-post **လို့မရပါ** — Page ပဲ ရပါတယ်။ Test message အစား အကြောင်းအရာအစစ် မထည့်မချင်း workflow ကို **activate မလုပ်ရ**။
+
+### Lesson 4 — Phase 1 Central Service (45 min) / သင်ခန်း ၄
+- **သင်တာ:** Google Form → Google Sheet queue → Ko approve → central n8n က နေ့စဉ် 08:00 auto-post (အသေးစိတ်ကို အောက်က **Lesson 4: Phase 1 Central Service** section နဲ့ `docs/phase1-central-service.md` မှာ ကြည့်ပါ)။
+- **Hands-on:** ကျောင်းသားတစ်ယောက်ချင်း Form ဖြည့်ပြီး၊ Ko က approve လုပ်တာကို စောင့်ပြီး၊ 08:00 run မှာ ကိုယ့် post တက်လာတာ စစ်ပါ။
+- **✅ Checkpoint:** Test row တစ်ခု Telegram **နဲ့** Facebook နှစ်ခုလုံးမှာ တက်ပြီး၊ Sheet မှာ Status = **posted** + Post ID ပေါ်နေခြင်း (ပြီးမှ test post များကို ဖျက်ပါ)။
+- **🔧 Break it on purpose:** Test row ရဲ့ Status ကို `pending` လို့ **တမင်ပြောင်းကြည့်ပါ** — workflow run လုပ်ရင် အဲဒီ row ကို ကျော်သွားတာ (skip) ကို မြင်ရပါမယ်။ ပြီးမှ `approved` ပြန်ပြောင်းပါ။
+- **သတိပေးချက်:** သင်တန်းသားများသည် Ko ရဲ့ n8n ကို တိုက်ရိုက် သုံးခွင့် မရပါ — Form ကနေပဲ တင်ရပါတယ်။
+
+## Lesson 4: Phase 1 Central Service / သင်ခန်း ၄ — Phase 1 Central Service
+
+**မြန်မာ:** သင်တန်းသားတိုင်း ကိုယ့် n8n ထားစရာ မလိုဘဲ၊ Ko ရဲ့ central n8n ကို သုံးပြီး content တင်နိုင်တဲ့ စနစ်ပါ။ သင်တန်းသားက Form ဖြည့်တယ် → Ko က စစ်ပြီး approve လုပ်တယ် → n8n က နေ့စဉ် မနက် ၈:၀၀ မှာ တင်ပေးတယ်။ အသေးစိတ်ကို `docs/phase1-central-service.md` မှာလည်း ဖတ်နိုင်ပါတယ်။
+
+**English:** Students don't need their own n8n — they submit through a Google Form, Ko approves, and Ko's central n8n posts daily at 08:00. Full detail is also in `docs/phase1-central-service.md`.
+
+### Flow / အဆင့်ဆင့်
+
+```
+Google Form → Google Sheet "Form Responses 1" → Ko approves (Status=approved)
+  → n8n Student-Auto-Post-Central (daily 08:00 Asia/Rangoon)
+  → Facebook / Telegram → Status=posted + Post ID
+```
+
+![Phase 1 workflow diagram](docs/images/phase1-workflow-diagram.png)
+
+![Ai Mindset automation mindmap](docs/images/automation-mindmap.png)
+
+### 1. Google Form — သင်တန်းသား ဖြည့်ရမယ့်အရာ
+
+Form: **"Ai Mindset - Student Auto-Post Request (Phase 1)"** — link ကို Ko က သင်တန်းသားများထံ တိုက်ရိုက် ပေးပါမယ် (ဒီ repo မှာ Form URL မထည့်ထားပါ)။
+
+| Field | ဖော်ပြချက် |
+|---|---|
+| Student Name | သင်တန်းသား အမည် |
+| Platform | Facebook / Telegram / Both |
+| Destination | Page API ID သို့မဟုတ် Telegram Chat ID (`<YOUR_PAGE_ID>` / `<YOUR_CHAT_ID>` ပုံစံ) |
+| Message | တင်ချင်တဲ့ စာသား |
+| Image URL | ပုံ link (ရှိရင်) |
+
+### 2. Google Sheet — "Form Responses 1" tab
+
+Form တင်ပြီးတာနဲ့ အဖြေများက queue Sheet ရဲ့ **"Form Responses 1"** tab ထဲကို အလိုအလျောက် ရောက်ပါတယ် (Timestamp က အလိုအလျောက် ဖြည့်ပေးပါတယ်)။
+
+| Column | ဖော်ပြချက် |
+|---|---|
+| Timestamp | Form တင်တဲ့ အချိန် (အလိုအလျောက်) — Update Queue ရဲ့ matching column |
+| Student Name | သင်တန်းသား အမည် |
+| Platform | Facebook / Telegram / Both |
+| Destination | Page API ID သို့မဟုတ် Telegram Chat ID |
+| Message | တင်ချင်တဲ့ စာသား |
+| Image URL | ပုံ link (ရှိရင်) |
+| Status | Ko က သတ်မှတ်တယ် — `approved` မှ post တင်ပါတယ် (H column) |
+| Post ID / Link | တင်ပြီးမှ ဖြည့်ပါတယ် (I column) |
+
+> ⚠️ **"Sheet1"** tab ထဲကို row ကူးထည့်စရာ မလိုတော့ပါ — workflow က "Form Responses 1" tab ကနေ တိုက်ရိုက် ဖတ်ပါတယ်။
+
+### 3. Ko approves — Ko ဘာလုပ်မလဲ
+
+1. **"Form Responses 1"** tab ကို စစ်တယ်။
+2. ကောင်းတဲ့ အတန်းကို **Status = approved** လို့ သတ်မှတ်တယ်။
+3. မကောင်းတဲ့ အတန်းကို `approved` **မလုပ်ပါနဲ့** — `pending` ပဲ ထားရင် workflow က ကျော်သွားပါတယ်။
+
+### 4. n8n workflow — Student-Auto-Post-Central
+
+- **Schedule Trigger:** နေ့စဉ် 08:00, cron `0 8 * * *`, timezone **Asia/Rangoon**။
+- **Read Queue:** "Form Responses 1" tab ကို ဖတ်တယ် (tab ကို **gid** နဲ့ ညွှန်းပါတယ် — tab နာမည်နဲ့ မဟုတ်ပါ၊ အမှားအကြောင်း အောက်က troubleshooting ကို ကြည့်ပါ)။
+- **Filter Approved:** Status = `approved` ဖြစ်တဲ့ row ပဲ ဆက်သွားတယ်။
+- **Platform routing:** **Is Facebook?** (Platform မှာ Facebook ပါရင်) → Facebook Graph API; **Is Telegram?** (Platform မှာ Telegram ပါရင်) → Telegram Send။ **Both** ဆိုရင် နှစ်ခုလုံး တင်ပါတယ်။
+- **Update Queue:** တင်ပြီးတာနဲ့ Status = **posted** + Post ID / Link ကို Timestamp နဲ့ တိုက်ပြီး ပြန်ရေးပါတယ်။
+- **Import:** `docs/student-auto-post-central-workflow.json` ကို n8n → Workflows → `⋯` → **Import from File** နဲ့ သွင်းပါ — credential တွေ လုံးဝ မပါတဲ့ template ဖြစ်ပါတယ်။ ကိုယ့် credential တွေကို node တိုင်းမှာ ပြန်ချိတ်ရပါမယ်။
+
+**Credentials needed / လိုအပ်တဲ့ credential များ:**
+- **Google Sheets OAuth2** — Google Cloud project မှာ Sheets API + Drive API ဖွင့်ပြီး၊ OAuth consent (External) + test user ထည့်ပြီး n8n မှာ "Google Sheets account" အဖြစ် ချိတ်ပါ။
+- **Telegram API** — Telegram bot credential ("Telegram Academy Bot") ကို Telegram Send node မှာ ချိတ်ပါ။
+- **Facebook Graph API** — Lesson 3 က "Facebook Graph account" credential ကို Facebook node မှာ ချိတ်ပါ (ကိုယ့် Page token နဲ့)။
+
+### ✅ Checkpoint (Lesson 4)
+Test row တစ်ခု (Platform = **Both**) ကို approve လုပ်ပြီး workflow ကို manual run လုပ်ပါ — Telegram **နဲ့** Facebook နှစ်ခုလုံးမှာ post တက်ရပါမယ်၊ Sheet မှာ Status = **posted** + Post ID ပေါ်ရပါမယ်။ ပြီးရင် test post နှစ်ခုလုံးကို **ဖျက်ပါ** (Facebook post ကို Graph API DELETE နဲ့၊ Telegram message ကို Bot API deleteMessage နဲ့)။
+
+---
+
+## 🐛 What went wrong & how we fixed it / ဘာမှားခဲ့လဲ၊ ဘယ်လိုပြင်ခဲ့လဲ
+
+Ko က 2026-11-10 မှာ Phase 1 workflow ကို တကယ် စမ်းသပ်ရင်း ကြုံခဲ့ရတဲ့ အမှားအစစ်တွေပါ။ Error message အတိုင်း လိုက်ဖတ်ပြီး ပြင်တတ်အောင် လေ့ကျင့်ပါ။ (ID / token အစစ်တွေ လုံးဝ မပါပါ — placeholder ပဲ သုံးထားပါတယ်။)
+
+| # | What went wrong / ဘာမှားခဲ့လဲ | How we fixed it / ဘယ်လိုပြင်ခဲ့လဲ |
+|---|---|---|
+| (a) | **Read Queue:** `Sheet with ID Form Responses 1 not found` — tab နာမည်ကို Sheet ID လို့ n8n က ထင်သွားတာ | **Fix:** sheetName ကို tab **နာမည်** နဲ့ မဟုတ်ဘဲ tab **gid** (tab ရဲ့ နံပါတ် — Sheet URL ရဲ့ `gid=` ကနေ ယူပါ) နဲ့ ညွှန်းပါ။ n8n မှာ mode ကို `id` လို့ သတ်မှတ်ပြီး value မှာ `<YOUR_TAB_ID>` ထည့်ပါ။ |
+| (b) | **Filter Approved:** condition က အလွတ် placeholder ပဲ ဖြစ်နေတယ် — approved row တွေတောင် မစစ်နိုင်ဘူး | **Fix:** condition ကို **Status equals `approved`** လို့ အတိအကျ သတ်မှတ်ပါ (`leftValue` = `{{ $json.Status }}`, `rightValue` = `approved`)။ |
+| (c) | **Split In Batches:** loop node ရဲ့ output ကို ဘယ်နေရာမှ မချိတ်မိလို့ Telegram node က ဘယ်တော့မှ မ run ဘူး | **Fix:** **Split In Batches node ကို ဖြုတ်ပစ်ပါ** — n8n က item တစ်ခုချင်းစီကို အလိုအလျောက် တစ်ကြိမ်စီ run ပေးပါတယ်၊ loop node မလိုအပ်ပါ။ |
+| (d) | **Update Queue:** `Column to Match On required` — ဘယ် column နဲ့ တိုက်ရမလဲ မသိလို့ update လုပ်မရဘူး | **Fix:** matching column ကို **Timestamp** လို့ ပေးပါ၊ matching value ကို Read Queue row က Timestamp (`{{ $('Read Queue').item.json.Timestamp }}`) ကနေ ယူပါ။ ပြီးတော့ Update Queue ကို **Telegram Send ပြီးမှ** run အောင် ပြန်ချိတ်ပါ — disabled ဖြစ်နေတဲ့ Facebook node နောက်မှာ မဟုတ်ပါ။ |
+| (e) | **Post ID empty:** post တင်ပြီးပေမဲ့ Sheet ရဲ့ Post ID / Link cell က အလွတ်ပဲ ဖြစ်နေတယ် | **Fix:** Telegram က post ID ကို `result.message_id` ထဲမှာ ထည့်ပေးတယ်၊ Facebook က `id` ထဲမှာ ထည့်ပေးတယ် — `$json` တစ်ခုတည်းနဲ့ မရပါ။ Update Queue ထဲက `$json` မှာ posting node ရဲ့ output မရှိဘူး (paired-item ပြဿနာ) — ဒါကြောင့် **posting node ကနေပဲ တိုက်ရိုက်ဖတ်ပါ** (`$('Telegram Send').item.json.result.message_id` / `$('Facebook Graph API').item.json.id`)၊ ပြီးတော့ တခြား branch မ run ခဲ့ရင် error မတက်အောင် **`isExecuted` guard** နဲ့ ကာပါ (`$('Facebook Graph API').isExecuted ? ... : ...`)။ |
+
+**သင်ခန်းစာ / Lesson:** Error message ကို အရင် **ဖတ်ပါ** — error က ဘယ် node မှာ၊ ဘာပျောက်နေလဲ ပြောပြပါတယ်။ ပြီးမှ တစ်ဆင့်ချင်း ပြင်ပါ၊ တစ်ခါတည်း အများကြီး မပြင်ပါနဲ့။
+
+---
+
+## 📝 Final quiz / နောက်ဆုံးမေးခွန်း (၆ ခု)
+
+1. AWS အကောင့်အသစ်ကနေ ရတဲ့ credit စုစုပေါင်း ဘယ်လောက်လဲ? ဘယ်ကနေ ရတာလဲ? / How much total AWS credit does a new account get, and from where?
+2. Singapore region ကို ရွေးရင် ဘာဖြစ်လဲ? ဘာလုပ်သင့်လဲ? / What happens if you pick the Singapore region, and what should you do instead?
+3. SSH key ကို root ရဲ့ `authorized_keys` ထဲ ထည့်မိရင် ဘာဖြစ်လဲ? ဘယ်နေရာမှာ ထည့်ရမလဲ? / What happens if the SSH key goes into root's `authorized_keys`, and where should it go?
+4. `manage_pages` scope ကို Graph Explorer မှာ သုံးရင် ဘာဖြစ်လဲ? အစား ဘာသုံးရမလဲ? / What happens if you use the `manage_pages` scope in Graph Explorer, and what should you use instead?
+5. Long-lived Page token က ဘယ်လောက် ကြာခံလဲ? သက်တမ်းကုန်ရင် ဘာလုပ်ရမလဲ? / How long does a long-lived Page token last, and what do you do when it expires?
+6. Phase 1 မှာ Status = `pending` ဖြစ်တဲ့ row ကို workflow က ဘာလုပ်လဲ? Post ID ကို Sheet မှာ ဘာကြောင့် အလွတ်ဖြစ်ခဲ့ရတာလဲ? / In Phase 1, what does the workflow do with a row whose Status is `pending`? Why was the Post ID cell left empty in Sheet?
+
+<details>
+<summary>✅ Answers / အဖြေများ</summary>
+
+1. **$200** — signup credit $100 + 5 onboarding tasks × $20 = $100။
+2. `Region ... (Singapore) unavailable` error တက်ပါတယ် — **upgrade / Activate advanced features မနှိပ်ပါနဲ့**၊ Sydney (`ap-southeast-2`) မှာ လုပ်ပါ။
+3. `Permission denied (publickey)` ဖြစ်ပါတယ် — `/home/ubuntu/.ssh/authorized_keys` ထဲ ထည့်ရပါမယ် (SSH user: `ubuntu`)။
+4. `Invalid Scopes: manage_pages` error တက်ပါတယ် — `manage_pages` က deprecated ပါ။ Use-case permissions (`pages_manage_posts` + `pages_read_engagement` + `pages_show_list`) + Facebook Login for Business ("Opt in to current Pages only") သုံးပါ။
+5. **≈ 60 days** (≈ 2 လ) — သက်တမ်းကုန်ရင် Phase 8 ကို ပြန်လုပ်ပြီး Page token အသစ် လဲပါ။
+6. **Skip (ကျော်သွားပါတယ်)** — Filter Approved က Status = `approved` ပဲ ဖြတ်သန်းခွင့်ပေးပါတယ်။ Post ID အလွတ်ဖြစ်ခဲ့တာက Telegram က `result.message_id` ထဲမှာ၊ Facebook က `id` ထဲမှာ ထည့်ပေးလို့ `$json` တစ်ခုတည်းနဲ့ မရခဲ့လို့ပါ — posting node ကနေ `isExecuted` guard နဲ့ တိုက်ရိုက်ဖတ်ရပါတယ်။
+
+</details>
 
 ---
 
@@ -381,6 +500,10 @@ curl -s -H "X-N8N-API-KEY: $KEY" https://n8n.komoe.org/api/v1/workflows
 | File | What it is |
 |---|---|
 | `README.md` | ဒီ guide (မြန်မာ + English) |
+| `docs/phase1-central-service.md` | Phase 1 Central Service guide (Form → Sheet → approve → auto-post) |
+| `docs/student-auto-post-central-workflow.json` | Student-Auto-Post-Central workflow — credentials လုံးဝ မပါတဲ့ template (import လုပ်လို့ရပါတယ်) |
+| `docs/images/phase1-workflow-diagram.png` | Phase 1 workflow diagram (Form → Sheet → n8n → Facebook / Telegram) |
+| `docs/images/automation-mindmap.png` | Ai Mindset automation mindmap |
 | `scripts/install-docker-n8n.sh` | Ubuntu update + 2 GB swap + Docker 29.9.3 + n8n 2.46.7 |
 | `Caddyfile` | `n8n.komoe.org` → `reverse_proxy 127.0.0.1:5678` (auto HTTPS) |
 | `n8n-workflow-fb-auto-post.json` | Ko's အမှန်တကယ် FB-Auto-Post workflow — credentials ဖယ်ရှားပြီး (import လုပ်လို့ရပါတယ်) |
