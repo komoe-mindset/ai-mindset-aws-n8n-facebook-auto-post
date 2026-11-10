@@ -22,7 +22,7 @@
 #
 # Tested on / စမ်းသပ်ပြီး:
 #   Lightsail n8n-sydney, Ubuntu 24.04 LTS, Sydney ap-southeast-2a,
-#   2 GB RAM / 2 vCPUs / 60 GB SSD, static IP 16.178.116.222,
+#   2 GB RAM / 2 vCPUs / 60 GB SSD, static IP <YOUR_VPS_IP>,
 #   domain n8n.komoe.org, Docker 29.9.3, n8n 2.46.7.
 #   Official full n8n stack needs 4 GB RAM — 2 GB works for
 #   testing / light use with SQLite + swap only.

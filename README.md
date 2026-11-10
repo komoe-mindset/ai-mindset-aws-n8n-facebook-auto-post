@@ -11,11 +11,11 @@
 | Item | Value |
 |---|---|
 | n8n | https://n8n.komoe.org/ |
-| Facebook Page | AI Mindset Academy — https://www.facebook.com/profile.php?id=61570808135698 |
-| Meta App ID | `1763533838455958` |
-| Page API ID | `1093505953843931` |
-| VPS static IP | `16.178.116.222` |
-| Workflow | FB-Auto-Post, id `tXQI5qZyDMTlAryo` |
+| Facebook Page | AI Mindset Academy — https://www.facebook.com/profile.php?id=<YOUR_PAGE_URL_ID> |
+| Meta App ID | `<YOUR_APP_ID>` |
+| Page API ID | `<YOUR_PAGE_ID>` |
+| VPS static IP | `<YOUR_VPS_IP>` |
+| Workflow | FB-Auto-Post, id `<YOUR_WORKFLOW_ID>` |
 
 > 🔒 **Security rule / လုံခြုံရေးစည်းမျဉ်း:** ဒီ repo မှာ **token, password, API key, App Secret, .pem, ဖုန်းနံပါတ် လုံးဝမပါပါ**။ လိုအပ်တဲ့နေရာတိုင်းမှာ `<YOUR_TOKEN>`, `<YOUR_APP_SECRET>`, `<YOUR_PAGE_ID>` ဆိုတဲ့ placeholder ပဲ သုံးထားပါတယ်။ Token/secret တွေကို chat မှာရော screenshot မှာပါ ဘယ်တော့မှ မမျှပါနဲ့။
 >
@@ -64,10 +64,10 @@
 | 3 | Lightsail VPS n8n-sydney ($12/mo) | Static IP + Running |
 | 4 | SSH + Ubuntu update + Docker + n8n | `http://<IP>:5678` → HTTP 200 |
 | 5 | Domain + Caddy HTTPS | https://n8n.komoe.org/ → HTTP 200 |
-| 6 | Meta App "Ai Mindset n8n" | App ID `1763533838455958`, permissions Ready for testing |
-| 7 | Graph Explorer test post | Post ID `1093505953843931_122130921662693604` |
+| 6 | Meta App "Ai Mindset n8n" | App ID `<YOUR_APP_ID>`, permissions Ready for testing |
+| 7 | Graph Explorer test post | Post ID `<YOUR_POST_ID>` |
 | 8 | Long-lived Page token (~60 days) | Debugger: Type **Page**, Valid **True** |
-| 9 | n8n workflow FB-Auto-Post | Post ID `1093505953843931_122130923870693604` |
+| 9 | n8n workflow FB-Auto-Post | Post ID `<YOUR_POST_ID>` |
 | 10 | Schedule daily 08:00 Asia/Rangoon | Workflow **inactive** (အကြောင်းအရာအစစ် မထည့်မချင်း မဖွင့်ပါနဲ့) |
 
 ---
@@ -85,7 +85,7 @@
 ### Task 2 — EC2 (✅ done 2026-11-10 08:19–08:20)
 - Launch instance: name `aws-exploer-test`, **Amazon Linux 2023**, `t3.micro`, key pair `aws-test` (.pem, RSA).
 - Running, 2/2 checks passed ဖြစ်ကြောင်း စစ်ပါ → ပြီးရင် **Terminate** လုပ်ပါ (ငွေ မကုန်အောင်)။
-- Instance ID (Ko's): `i-0756b9c49556be800`.
+- Instance ID (Ko's): `<YOUR_EC2_INSTANCE_ID>`.
 
 ### Task 3 — Bedrock Playground (❌ BLOCKED — ဒါက ပုံမှန်ပါ!)
 - Playground → Nova Micro / Nova Lite 1.0 → error: `ValidationException: Operation not allowed`.
@@ -116,7 +116,7 @@ Billing → Credits: **Credits remaining $200.00, Amount due $0.00, Free plan, 1
 
 **English:** The new Free plan account is locked to a single assigned region — Sydney `ap-southeast-2`. Singapore is blocked. Do **not** click "Activate advanced features" or upgrade. Do Lambda and RDS in Sydney instead.
 
-> ℹ️ Region ကို instance ဖန်တီးပြီးမှ ပြောင်းလို့မရပါ — Singapore လိုချင်ရင် အဲဒီမှာ အသစ်ဖန်တီးပြီး migrate လုပ်ရပါမယ်။ Ko's အဟောင်း Tokyo VPS (Ubuntu-IMM, `52.69.122.130`) ဟာ သီးခြား VPS ဖြစ်ပြီး ဒီ project နဲ့ မဆိုင်ပါ။
+> ℹ️ Region ကို instance ဖန်တီးပြီးမှ ပြောင်းလို့မရပါ — Singapore လိုချင်ရင် အဲဒီမှာ အသစ်ဖန်တီးပြီး migrate လုပ်ရပါမယ်။ Ko's အဟောင်း Tokyo VPS (Ubuntu-IMM, `<YOUR_OLD_VPS_IP>`) ဟာ သီးခြား VPS ဖြစ်ပြီး ဒီ project နဲ့ မဆိုင်ပါ။
 
 ---
 
@@ -130,18 +130,18 @@ Billing → Credits: **Credits remaining $200.00, Amount due $0.00, Free plan, 1
 | OS | **Ubuntu 24.04 LTS** |
 | Region / Zone | Sydney, Zone A (`ap-southeast-2a`) |
 | Plan | **$12/mo** — 2 GB RAM, 2 vCPUs, 60 GB SSD |
-| Static IP | `StaticIp-1` → **`16.178.116.222`** |
+| Static IP | `StaticIp-1` → **`<YOUR_VPS_IP>`** |
 
 - ❌ **$24/mo (4 GB) plan ကို အရင်ရွေးခဲ့ပေမဲ့ reject ခံခဲ့ရပါတယ်:** `"CreateInstances[ap-southeast-2] Sorry, your account can not create an instance using this Lightsail plan size. Please try a smaller plan size"` — Free plan မှာ $12 plan ပဲ ရပါတယ်။
-- Static IP attach လုပ်ပါ — dynamic IP (`52.63.169.207`) ကို အစားထိုးပြီး **အခု `16.178.116.222` ကိုပဲ သုံးပါ**။
-- Private IP: `172.26.13.155` (မှတ်ထားရုံပါ)။
+- Static IP attach လုပ်ပါ — dynamic IP (`<YOUR_VPS_IP>`) ကို အစားထိုးပြီး **အခု `<YOUR_VPS_IP>` ကိုပဲ သုံးပါ**။
+- Private IP: `<YOUR_PRIVATE_IP>` (မှတ်ထားရုံပါ)။
 - Firewall (Lightsail Networking → Firewall): ports **22, 80, 443, 5678** ဖွင့်ပါ။
 - $12 × 6 လ = $72 → $200 credit ထဲမှာ လုံလောက်ပါတယ်။
 
 **English:** Create a Lightsail instance in Sydney Zone A, Ubuntu 24.04 LTS, $12/mo plan (the $24/mo 4 GB plan is rejected on the Free plan). Attach a static IP and use it from then on. Open firewall ports 22, 80, 443, 5678.
 
 ### ✅ Checkpoint
-Instance status **Running**, static IP `16.178.116.222` attached.
+Instance status **Running**, static IP `<YOUR_VPS_IP>` attached.
 
 ---
 
@@ -165,16 +165,16 @@ chmod 600 ~/.ssh/authorized_keys
 **Verify SSH:**
 
 ```bash
-ssh ubuntu@16.178.116.222
-# hostname: ip-172-26-13-155, Ubuntu 24.04.4 LTS
+ssh ubuntu@<YOUR_VPS_IP>
+# hostname: ip-<YOUR_PRIVATE_IP>, Ubuntu 24.04.4 LTS
 # Mem: 1.9 Gi total / 384 Mi used / 1.3 Gi free
 ```
 
 **Install — script ကို သုံးပါ (ဒီ repo မှာပါပါတယ်):**
 
 ```bash
-scp scripts/install-docker-n8n.sh ubuntu@16.178.116.222:~/
-ssh ubuntu@16.178.116.222 'bash ~/install-docker-n8n.sh'
+scp scripts/install-docker-n8n.sh ubuntu@<YOUR_VPS_IP>:~/
+ssh ubuntu@<YOUR_VPS_IP> 'bash ~/install-docker-n8n.sh'
 ```
 
 Script က ဘာလုပ်သလဲ:
@@ -189,7 +189,7 @@ Script က ဘာလုပ်သလဲ:
 
 ### ✅ Checkpoint (VPS အတွင်းကနေ စစ်ပါ — n8n က 127.0.0.1 ပဲ နားထောင်ပါတယ်)
 ```bash
-ssh ubuntu@16.178.116.222 'curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:5678/'
+ssh ubuntu@<YOUR_VPS_IP> 'curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:5678/'
 # → 200
 ```
 
@@ -199,7 +199,7 @@ ssh ubuntu@16.178.116.222 'curl -s -o /dev/null -w "%{http_code}\n" http://127.0
 
 **မြန်မာ:** Ko မှာ `komoe.org` domain ရှိပြီး Cloudflare DNS သုံးပါတယ်။
 
-1. **DNS A record:** `n8n.komoe.org` → `16.178.116.222`, **DNS only (not proxied)** — Cloudflare proxy (orange cloud) ပိတ်ထားပါ။
+1. **DNS A record:** `n8n.komoe.org` → `<YOUR_VPS_IP>`, **DNS only (not proxied)** — Cloudflare proxy (orange cloud) ပိတ်ထားပါ။
 2. **Caddy 2.11.9 install** — official apt repo ကနေ (အသေးစိတ် command တွေကို ဒီ repo ရဲ့ `Caddyfile` ထဲက comment မှာ ကြည့်ပါ)။
 3. **`Caddyfile`:** ဒီ repo မှာပါပါတယ် —
    ```
@@ -228,7 +228,7 @@ curl -s -o /dev/null -w "%{http_code}\n" https://n8n.komoe.org/
 | Setting | Value |
 |---|---|
 | App name | **Ai Mindset n8n** |
-| App ID | `1763533838455958` |
+| App ID | `<YOUR_APP_ID>` |
 | Contact email | `komoeybs@gmail.com` |
 | Use case | **"Manage everything on your Page"** (Pages API) |
 | Business portfolio | None (မလိုအပ်ပါ) |
@@ -251,13 +251,13 @@ curl -s -o /dev/null -w "%{http_code}\n" https://n8n.komoe.org/
 
 1. Token ရယူပါ: **User Token** ကို `me/accounts` နဲ့ စစ်ပါ —
    `GET /me/accounts` → Page **AI Mindset Academy** ကို ရှာပါ။
-2. **Page API ID:** `1093505953843931` (tasks ထဲမှာ `CREATE_CONTENT` ပါရမည်)။
-   > ⚠️ **သတိပြုပါ:** Page URL ထဲက ID `61570808135698` နဲ့ မတူပါ။ API အတွက် **`1093505953843931`** ကိုပဲ သုံးပါ။
-3. Test post တင်ပါ: `POST /1093505953843931/feed` with `message` = `Hello from Ai Mindset n8n - test post`
+2. **Page API ID:** `<YOUR_PAGE_ID>` (tasks ထဲမှာ `CREATE_CONTENT` ပါရမည်)။
+   > ⚠️ **သတိပြုပါ:** Page URL ထဲက ID `<YOUR_PAGE_URL_ID>` နဲ့ မတူပါ။ API အတွက် **`<YOUR_PAGE_ID>`** ကိုပဲ သုံးပါ။
+3. Test post တင်ပါ: `POST /<YOUR_PAGE_ID>/feed` with `message` = `Hello from Ai Mindset n8n - test post`
 
-**Result (Ko's, 2026-11-10 10:44):** ✅ Success — post ID **`1093505953843931_122130921662693604`**, Page မှာ `Published by Ai Mindset n8n` လို့ ပေါ်ပါတယ်။
+**Result (Ko's, 2026-11-10 10:44):** ✅ Success — post ID **`<YOUR_POST_ID>`**, Page မှာ `Published by Ai Mindset n8n` လို့ ပေါ်ပါတယ်။
 
-**English:** In Graph Explorer, `GET /me/accounts` to find the Page, then `POST /1093505953843931/feed` with a message. Use the Page API ID `1093505953843931`, not the Page URL ID `61570808135698`.
+**English:** In Graph Explorer, `GET /me/accounts` to find the Page, then `POST /<YOUR_PAGE_ID>/feed` with a message. Use the Page API ID `<YOUR_PAGE_ID>`, not the Page URL ID `<YOUR_PAGE_URL_ID>`.
 
 ### Common errors / အမှားများ
 | Error | Meaning / အဓိပ္ပါယ် | Fix |
@@ -300,15 +300,15 @@ GET https://graph.facebook.com/v25.0/oauth/access_token
 | Node | Settings |
 |---|---|
 | **Schedule Trigger** (အရင်ဆုံး Manual Trigger နဲ့ စမ်းပါ) | — |
-| **Facebook Graph API** | HTTP Method **POST**, Graph API Version **v25.0** (n8n မှာ အမြင့်ဆုံး), Node **`1093505953843931`**, Edge **`feed`**, Query Parameter: `message` = `Test post from n8n workflow` |
+| **Facebook Graph API** | HTTP Method **POST**, Graph API Version **v25.0** (n8n မှာ အမြင့်ဆုံး), Node **`<YOUR_PAGE_ID>`**, Edge **`feed`**, Query Parameter: `message` = `Test post from n8n workflow` |
 
 **Credential:** n8n → Credentials → Facebook Graph API → name **`Facebook Graph account`** → Access Token: `<YOUR_LONG_LIVED_PAGE_TOKEN>` → Save → **Test နှိပ်ပြီး အောင်မြင်ကြောင်း စစ်ပါ**။
 
-**Import (အလွယ်နည်း):** ဒီ repo ရဲ့ `n8n-workflow-fb-auto-post.json` ကို n8n → Workflows → `⋯` → **Import from File** နဲ့ သွင်းပါ — ဒါက Ko's အမှန်တကယ် workflow (id `tXQI5qZyDMTlAryo`) ကို credential တွေ ဖယ်ရှားထားတဲ့ version ဖြစ်ပါတယ်။ ပြီးရင် ကိုယ့် `Facebook Graph account` credential ကို node မှာ ပြန်ချိတ်ပါ။
+**Import (အလွယ်နည်း):** ဒီ repo ရဲ့ `n8n-workflow-fb-auto-post.json` ကို n8n → Workflows → `⋯` → **Import from File** နဲ့ သွင်းပါ — ဒါက Ko's အမှန်တကယ် workflow (id `<YOUR_WORKFLOW_ID>`) ကို credential တွေ ဖယ်ရှားထားတဲ့ version ဖြစ်ပါတယ်။ ပြီးရင် ကိုယ့် `Facebook Graph account` credential ကို node မှာ ပြန်ချိတ်ပါ။
 
-**Test run (Ko's, 2026-11-10 11:12):** ✅ `Execute workflow` → Node executed successfully → post ID **`1093505953843931_122130923870693604`** (Page မှာ မြင်ရပါတယ်)။
+**Test run (Ko's, 2026-11-10 11:12):** ✅ `Execute workflow` → Node executed successfully → post ID **`<YOUR_POST_ID>`** (Page မှာ မြင်ရပါတယ်)။
 
-**English:** Build the workflow with a Manual Trigger first, then a Facebook Graph API node (POST, v25.0, Node `1093505953843931`, Edge `feed`, `message` parameter). Create the `Facebook Graph account` credential with your long-lived Page token and test it. Or import `n8n-workflow-fb-auto-post.json` from this repo and re-attach your own credential.
+**English:** Build the workflow with a Manual Trigger first, then a Facebook Graph API node (POST, v25.0, Node `<YOUR_PAGE_ID>`, Edge `feed`, `message` parameter). Create the `Facebook Graph account` credential with your long-lived Page token and test it. Or import `n8n-workflow-fb-auto-post.json` from this repo and re-attach your own credential.
 
 ---
 
@@ -318,7 +318,7 @@ GET https://graph.facebook.com/v25.0/oauth/access_token
 
 1. Manual Trigger ကို **Schedule Trigger** နဲ့ အစားထိုးပါ — n8n-nodes-base.scheduleTrigger v1.2, cron expression **`0 8 * * *`**, workflow timezone **Asia/Rangoon**။
 2. Facebook node ကို မပြောင်းပါနဲ့။
-3. Workflow ကို **Save** လုပ်ပါ — Ko's workflow: **FB-Auto-Post**, id `tXQI5qZyDMTlAryo`။
+3. Workflow ကို **Save** လုပ်ပါ — Ko's workflow: **FB-Auto-Post**, id `<YOUR_WORKFLOW_ID>`။
 4. ⛔ **Active မလုပ်ရသေးပါ!** `message` ထဲမှာ `Test post from n8n workflow` ပဲ ရှိနေသေးလို့ **inactive** ပဲ ထားပါ။ အကြောင်းအရာအစစ် (real content) ထည့်ပြီးမှ Activate လုပ်ပါ။
 5. Schedule: **နေ့စဉ် မနက် ၈:၀၀ (Asia/Rangoon), ၁ ရက် ၁ post**။ Content source ကို Ko က နောက်မှ ဆုံးဖြတ်ပါမယ်။
 

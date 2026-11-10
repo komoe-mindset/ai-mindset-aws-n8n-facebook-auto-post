@@ -34,7 +34,7 @@
       "parameters": {
         "httpRequestMethod": "POST",
         "graphApiVersion": "v25.0",
-        "node": "1093505953843931",
+        "node": "<YOUR_PAGE_ID>",
         "edge": "feed",
         "options": {
           "queryParameters": {
